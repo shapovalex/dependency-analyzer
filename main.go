@@ -1,11 +1,11 @@
 package main
 
 import (
-	"depAnalyzer/processor"
-	"depAnalyzer/processor/comparator"
-	"depAnalyzer/processor/license"
-	"depAnalyzer/runner"
 	"flag"
+	"github.com/shapovalex/depAnalyzer/processor"
+	"github.com/shapovalex/depAnalyzer/processor/comparator"
+	"github.com/shapovalex/depAnalyzer/processor/license"
+	"github.com/shapovalex/depAnalyzer/runner"
 )
 
 func main() {
