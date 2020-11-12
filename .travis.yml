@@ -3,6 +3,10 @@ language: go
 go:
   - "1.15"
 
+script:
+  - go test -v ./...
+  - go build main.go
+
 before_deploy:
   - ls -al
 deploy:
