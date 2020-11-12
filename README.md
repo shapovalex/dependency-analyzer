@@ -1,3 +1,6 @@
+
+![](https://travis-ci.com/shapovalex/dependency-analyzer.svg?branch=develop Build status)
+
 Parameters
 
 -d - Dependency manager
