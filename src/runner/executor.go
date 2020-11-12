@@ -6,7 +6,7 @@ type Executor struct {
 	processors []processor.Processor
 }
 
-func (e Executor) execute(params processor.Params) {
+func (e Executor) Execute(params processor.Params) {
 	for _, processorItem := range e.processors {
 		if params.DependencyManager == processorItem.GetSupportedDependencyManager() &&
 			params.Operation == processorItem.GetSupportedOperation() {

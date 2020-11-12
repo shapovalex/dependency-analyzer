@@ -12,3 +12,7 @@ func (p PyPiComparator) GetSupportedDependencyManager() string {
 func (p PyPiComparator) Process(params processor.Params) {
 
 }
+
+func (p PyPiComparator) GetSupportedOperation() string {
+	return "compare"
+}
