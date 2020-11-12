@@ -3,6 +3,7 @@ package main
 import (
 	"depAnalyzer/src/processor"
 	"depAnalyzer/src/processor/comparator"
+	"depAnalyzer/src/processor/license"
 	"depAnalyzer/src/runner"
 	"flag"
 )
@@ -21,9 +22,11 @@ func main() {
 	params.OutputFiles = *rFlag
 
 	pypiComparator := new(comparator.PyPiComparator)
+	pypiLicense := new(license.PyPiLicense)
 
 	executor := runner.NewExecutor([]processor.Processor{
 		pypiComparator,
+		pypiLicense,
 	})
 
 	executor.Execute(params)
