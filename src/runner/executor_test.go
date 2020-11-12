@@ -31,7 +31,7 @@ func TestShouldCallPypiComparatorOnSingleProcessor(t *testing.T) {
 	executor := NewExecutor(processors)
 	params := processor.Params{
 		DependencyManager: "pypi",
-		Files:             "requirements1.txt,requirements2.txt",
+		InputFiles:        "requirements1.txt,requirements2.txt",
 		Operation:         "compare",
 	}
 	pypiComparator.On("Process", mock.Anything).Return()
@@ -50,7 +50,7 @@ func TestShouldCallPypiComparatorOnMultipleProcessors(t *testing.T) {
 	executor := NewExecutor(processors)
 	params := processor.Params{
 		DependencyManager: "pypi",
-		Files:             "requirements1.txt,requirements2.txt",
+		InputFiles:        "requirements1.txt,requirements2.txt",
 		Operation:         "compare",
 	}
 	pypiComparator.On("Process", mock.Anything).Return()
@@ -74,7 +74,7 @@ func TestShouldCallPypiComparatorBasedOnOperation(t *testing.T) {
 	executor := NewExecutor(processors)
 	params := processor.Params{
 		DependencyManager: "pypi",
-		Files:             "requirements1.txt,requirements2.txt",
+		InputFiles:        "requirements1.txt,requirements2.txt",
 		Operation:         "licenses",
 	}
 	pypiComparator1.On("Process", mock.Anything).Return()

@@ -2,6 +2,7 @@ package processor
 
 type Params struct {
 	DependencyManager string
-	Files             string
+	InputFiles        string
 	Operation         string
+	OutputFiles       string
 }
