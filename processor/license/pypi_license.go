@@ -1,8 +1,8 @@
 package license
 
 import (
-	"depAnalyzer/src/helper"
-	"depAnalyzer/src/processor"
+	"depAnalyzer/helper"
+	"depAnalyzer/processor"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"

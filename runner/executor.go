@@ -1,7 +1,7 @@
 package runner
 
 import (
-	"depAnalyzer/src/processor"
+	"depAnalyzer/processor"
 	"fmt"
 )
 

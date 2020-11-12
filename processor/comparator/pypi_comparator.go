@@ -1,8 +1,8 @@
 package comparator
 
 import (
-	"depAnalyzer/src/helper"
-	"depAnalyzer/src/processor"
+	"depAnalyzer/helper"
+	"depAnalyzer/processor"
 	"fmt"
 	"os"
 	"strings"

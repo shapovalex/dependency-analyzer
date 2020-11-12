@@ -1,10 +1,10 @@
 package main
 
 import (
-	"depAnalyzer/src/processor"
-	"depAnalyzer/src/processor/comparator"
-	"depAnalyzer/src/processor/license"
-	"depAnalyzer/src/runner"
+	"depAnalyzer/processor"
+	"depAnalyzer/processor/comparator"
+	"depAnalyzer/processor/license"
+	"depAnalyzer/runner"
 	"flag"
 )
 
