@@ -26,7 +26,7 @@ func (p PyPiComparator) Process(params processor.Params) {
 	result := p.compare(lines1, lines2)
 	errW := helper.WriteLines(result, params.OutputFiles)
 	if errW != nil {
-		fmt.Println("Unable to write to ouput files")
+		fmt.Println("Unable to write to output files")
 		os.Exit(1)
 	}
 }
