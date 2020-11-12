@@ -1,4 +1,4 @@
-module depAnalyzer
+module github.com/shapovalex/depAnalyzer
 
 go 1.15
 

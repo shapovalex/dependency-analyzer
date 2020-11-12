@@ -1,8 +1,8 @@
 package runner
 
 import (
-	"depAnalyzer/processor"
 	"fmt"
+	"github.com/shapovalex/depAnalyzer/processor"
 )
 
 type Executor struct {

@@ -1,9 +1,9 @@
 package comparator
 
 import (
-	"depAnalyzer/helper"
-	"depAnalyzer/processor"
 	"fmt"
+	"github.com/shapovalex/depAnalyzer/helper"
+	"github.com/shapovalex/depAnalyzer/processor"
 	"os"
 	"strings"
 )

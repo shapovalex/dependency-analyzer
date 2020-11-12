@@ -1,10 +1,10 @@
 package license
 
 import (
-	"depAnalyzer/helper"
-	"depAnalyzer/processor"
 	"encoding/json"
 	"fmt"
+	"github.com/shapovalex/depAnalyzer/helper"
+	"github.com/shapovalex/depAnalyzer/processor"
 	"io/ioutil"
 	"net/http"
 	"os"

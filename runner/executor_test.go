@@ -1,7 +1,7 @@
 package runner
 
 import (
-	"depAnalyzer/processor"
+	"github.com/shapovalex/depAnalyzer/processor"
 	"github.com/stretchr/testify/mock"
 	"testing"
 )
