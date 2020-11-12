@@ -36,7 +36,7 @@ func TestShouldCallPypiComparatorOnSingleProcessor(t *testing.T) {
 	}
 	pypiComparator.On("Process", mock.Anything).Return()
 	pypiComparator.On("GetSupportedDependencyManager").Return("pypi")
-	pypiComparator.On("GetSupportedDependencyManager").Return("compare")
+	pypiComparator.On("GetSupportedOperation").Return("compare")
 
 	executor.execute(params)
 	pypiComparator.AssertCalled(t, "Process", params)
@@ -55,11 +55,11 @@ func TestShouldCallPypiComparatorOnMultipleProcessors(t *testing.T) {
 	}
 	pypiComparator.On("Process", mock.Anything).Return()
 	pypiComparator.On("GetSupportedDependencyManager").Return("pypi")
-	pypiComparator.On("GetSupportedDependencyManager").Return("compare")
+	pypiComparator.On("GetSupportedOperation").Return("compare")
 
 	mavenComparator.On("Process", mock.Anything).Return()
 	mavenComparator.On("GetSupportedDependencyManager").Return("maven")
-	mavenComparator.On("GetSupportedDependencyManager").Return("compare")
+	mavenComparator.On("GetSupportedOperation").Return("compare")
 
 	executor.execute(params)
 	pypiComparator.AssertCalled(t, "Process", params)
@@ -79,11 +79,11 @@ func TestShouldCallPypiComparatorBasedOnOperation(t *testing.T) {
 	}
 	pypiComparator1.On("Process", mock.Anything).Return()
 	pypiComparator1.On("GetSupportedDependencyManager").Return("pypi")
-	pypiComparator1.On("GetSupportedDependencyManager").Return("compare")
+	pypiComparator1.On("GetSupportedOperation").Return("compare")
 
 	pypiComparator2.On("Process", mock.Anything).Return()
 	pypiComparator2.On("GetSupportedDependencyManager").Return("pypi")
-	pypiComparator2.On("GetSupportedDependencyManager").Return("licenses")
+	pypiComparator2.On("GetSupportedOperation").Return("licenses")
 
 	executor.execute(params)
 	pypiComparator1.AssertNotCalled(t, "Process", params)

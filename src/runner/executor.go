@@ -8,7 +8,8 @@ type Executor struct {
 
 func (e Executor) execute(params processor.Params) {
 	for _, processorItem := range e.processors {
-		if params.DependencyManager == processorItem.GetSupportedDependencyManager() {
+		if params.DependencyManager == processorItem.GetSupportedDependencyManager() &&
+			params.Operation == processorItem.GetSupportedOperation() {
 			processorItem.Process(params)
 		}
 	}
