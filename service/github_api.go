@@ -63,5 +63,9 @@ func GetGithubReposApiUrl(repoUrl string) string {
 	addressStartIndex := strings.Index(repoUrl, gitHubAddress)
 	repoUrl = repoUrl[addressStartIndex:]
 
+	for strings.Count(repoUrl, "/") > 2 {
+		repoUrl = repoUrl[:strings.LastIndex(repoUrl, "/")]
+	}
+
 	return "https://api." + repoUrl[:len(gitHubAddress)] + "/repos" + repoUrl[len(gitHubAddress):]
 }
