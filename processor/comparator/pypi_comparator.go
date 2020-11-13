@@ -12,7 +12,7 @@ type PyPiComparator struct {
 }
 
 func (p PyPiComparator) GetSupportedDependencyManager() string {
-	return "pypi"
+	return "pip"
 }
 
 func (p PyPiComparator) Process(params processor.Params) {

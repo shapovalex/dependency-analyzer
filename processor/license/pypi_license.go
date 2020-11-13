@@ -34,7 +34,7 @@ func (p PyPiLicense) Process(params processor.Params) {
 }
 
 func (p PyPiLicense) GetSupportedDependencyManager() string {
-	return "pypi"
+	return "pip"
 }
 
 func (p PyPiLicense) GetSupportedOperation() string {

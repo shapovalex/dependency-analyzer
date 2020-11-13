@@ -1,5 +1,5 @@
 
-![](https://travis-ci.com/shapovalex/dependency-analyzer.svg?branch=develop Build status)
+![Build status](https://travis-ci.com/shapovalex/dependency-analyzer.svg?branch=develop "Build status")
 
 Parameters
 
@@ -13,6 +13,6 @@ Parameters
 
 Supported combinations of -d -o flags:
 
-pypi compare - ./main -d pypi -f req1.txt,req2.txt -o compare
-pypi compare - ./main -d pypi -f req1.txt -o license
+pypi compare - ./main -d pip -f req1.txt,req2.txt -o compare
+pypi compare - ./main -d pip -f req1.txt -o license
  
