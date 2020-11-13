@@ -1,12 +1,11 @@
 package license
 
 import (
-	"encoding/json"
 	"fmt"
 	"github.com/shapovalex/depAnalyzer/helper"
+	"github.com/shapovalex/depAnalyzer/model"
 	"github.com/shapovalex/depAnalyzer/processor"
-	"io/ioutil"
-	"net/http"
+	"github.com/shapovalex/depAnalyzer/service"
 	"os"
 	"strings"
 )
@@ -23,9 +22,12 @@ func (p PyPiLicense) Process(params processor.Params) {
 	var result []string
 	for _, line := range lines {
 		dependencyParts := strings.Split(line, "==")
-		releasePypiInfo := resolvePypiInfoForRelease(dependencyParts[0], dependencyParts[1])
-		packagePypiInfo := resolvePypiInfoForPackage(dependencyParts[0])
-		result = append(result, line+","+extractLicenseType(releasePypiInfo)+","+extractLicenseLineAddress(dependencyParts[0], dependencyParts[1], releasePypiInfo, packagePypiInfo))
+		//releasePypiInfo := resolvePypiInfoForRelease(dependencyParts[0], dependencyParts[1])
+		//packagePypiInfo := resolvePypiInfoForPackage(dependencyParts[0])
+		//result = append(result, line+","+extractLicenseType(releasePypiInfo)+","+extractLicenseLineAddress(dependencyParts[0], dependencyParts[1], releasePypiInfo, packagePypiInfo))
+
+		pypiInfoForPackage := service.ResolvePypiInfoForPackage(dependencyParts[0])
+		result = append(result, line+","+extractLicenseType(pypiInfoForPackage)+","+service.FindLicenseFile(extractGithubAddress(pypiInfoForPackage)))
 	}
 	errW := helper.WriteLines(result, params.OutputFiles)
 	if errW != nil {
@@ -34,7 +36,7 @@ func (p PyPiLicense) Process(params processor.Params) {
 	}
 }
 
-func extractLicenseType(pypiInfo pypiInfo) string {
+func extractLicenseType(pypiInfo model.PypiInfo) string {
 	if pypiInfo.License != "" {
 		return pypiInfo.License
 	}
@@ -49,43 +51,22 @@ func (p PyPiLicense) GetSupportedOperation() string {
 	return "license"
 }
 
-func checkAndExtractBaseUrl(info pypiInfo, urlString string) string {
-	if info.Project_urls[urlString] != "" {
-		return info.Project_urls[urlString]
-	}
-	return ""
-}
-
-func extractLicenseLineAddress(name string, version string, releaseInfo pypiInfo, packageInfo pypiInfo) string {
+func extractGithubAddress(packageInfo model.PypiInfo) string {
 	var baseUrl string
 
-	baseUrl = checkAndExtractBaseUrl(releaseInfo, "Source")
-	if baseUrl != "" {
-		return baseUrl + "/blob/" + version + "/LICENSE"
-	}
 	baseUrl = checkAndExtractBaseUrl(packageInfo, "Source")
 	if baseUrl != "" {
-		return baseUrl + "/blob/master/LICENSE"
+		return baseUrl
 	}
 
-	baseUrl = checkAndExtractBaseUrl(releaseInfo, "Source Code")
-	if baseUrl != "" {
-		return baseUrl + "/blob/" + version + "/LICENSE"
-	}
 	baseUrl = checkAndExtractBaseUrl(packageInfo, "Source Code")
 	if baseUrl != "" {
-		return baseUrl + "/blob/master/LICENSE"
+		return baseUrl
 	}
 
-	if strings.Contains(releaseInfo.Project_urls["Homepage"], "github") {
-		baseUrl = checkAndExtractBaseUrl(releaseInfo, "Homepage")
-		if baseUrl != "" {
-			return baseUrl + "/blob/" + version + "/LICENSE"
-		}
-		baseUrl = checkAndExtractBaseUrl(packageInfo, "Homepage")
-		if baseUrl != "" {
-			return baseUrl + "/blob/master/LICENSE"
-		}
+	baseUrl = checkAndExtractBaseUrl(packageInfo, "Homepage")
+	if baseUrl != "" {
+		return baseUrl
 	}
 
 	githubIndex := strings.Index(packageInfo.Description, "github.com")
@@ -111,43 +92,9 @@ func extractLicenseLineAddress(name string, version string, releaseInfo pypiInfo
 	return "Undefined License URL"
 }
 
-func resolvePypiInfoForPackage(name string) pypiInfo {
-	baseAddress := "https://pypi.python.org/pypi/%s/json"
-	address := fmt.Sprintf(baseAddress, name)
-	return resolvePypiInfo(address)
-}
-
-func resolvePypiInfoForRelease(name string, version string) pypiInfo {
-	baseAddress := "https://pypi.python.org/pypi/%s/%s/json"
-	address := fmt.Sprintf(baseAddress, name, version)
-	return resolvePypiInfo(address)
-}
-
-func resolvePypiInfo(address string) pypiInfo {
-	response, err := http.Get(address)
-	if err != nil {
-		fmt.Println("Unable to get license, error during http request")
-		return getErrorPyPiInfo()
+func checkAndExtractBaseUrl(info model.PypiInfo, urlString string) string {
+	if strings.Contains(info.Project_urls[urlString], "github.com") {
+		return info.Project_urls[urlString]
 	}
-	defer response.Body.Close()
-	body, err := ioutil.ReadAll(response.Body)
-	if err != nil {
-		fmt.Println("Unable to get license, error during reading data")
-		return getErrorPyPiInfo()
-	}
-
-	var pypiResponse pypiResponse
-	err = json.Unmarshal(body, &pypiResponse)
-	if err != nil {
-		fmt.Println("Unable to get license for package", address, ". Error during parsing json")
-		return getErrorPyPiInfo()
-	}
-
-	return pypiResponse.Info
-}
-
-func getErrorPyPiInfo() pypiInfo {
-	info := new(pypiInfo)
-	info.License = "Unable to resolve version"
-	return *info
+	return ""
 }

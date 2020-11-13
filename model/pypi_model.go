@@ -1,16 +1,16 @@
-package license
+package model
 
-type pypiProjectUrls struct {
+type PypiProjectUrls struct {
 	Source   string
 	Homepage string
 }
 
-type pypiInfo struct {
+type PypiInfo struct {
 	License      string
 	Project_urls map[string]string
 	Description  string
 }
 
-type pypiResponse struct {
-	Info pypiInfo
+type PypiResponse struct {
+	Info PypiInfo
 }
