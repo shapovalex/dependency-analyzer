@@ -22,12 +22,8 @@ func (p PyPiLicense) Process(params processor.Params) {
 	var result []string
 	for _, line := range lines {
 		dependencyParts := strings.Split(line, "==")
-		//releasePypiInfo := resolvePypiInfoForRelease(dependencyParts[0], dependencyParts[1])
-		//packagePypiInfo := resolvePypiInfoForPackage(dependencyParts[0])
-		//result = append(result, line+","+extractLicenseType(releasePypiInfo)+","+extractLicenseLineAddress(dependencyParts[0], dependencyParts[1], releasePypiInfo, packagePypiInfo))
-
 		pypiInfoForPackage := service.ResolvePypiInfoForPackage(dependencyParts[0])
-		result = append(result, line+","+extractLicenseType(pypiInfoForPackage)+","+service.FindLicenseFile(extractGithubAddress(pypiInfoForPackage)))
+		result = append(result, dependencyParts[0]+"\t"+dependencyParts[1]+"\t"+extractLicenseType(pypiInfoForPackage)+"\t"+service.FindLicenseFile(extractGithubAddress(pypiInfoForPackage)))
 	}
 	errW := helper.WriteLines(result, params.OutputFiles)
 	if errW != nil {

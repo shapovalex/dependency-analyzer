@@ -13,6 +13,6 @@ Parameters
 
 Supported combinations of -d -o flags:
 
-pypi compare - ./main -d pip -f req1.txt,req2.txt -o compare
+pypi compare - ./main -d pip -f req1.txt,req2.txt -o compare -r diff.txt
 pypi compare - ./main -d pip -f req1.txt -o license
  
