@@ -5,4 +5,5 @@ type Params struct {
 	InputFiles        string
 	Operation         string
 	OutputFiles       string
+	InputFilesContent []string
 }

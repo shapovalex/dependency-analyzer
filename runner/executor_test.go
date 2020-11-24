@@ -2,90 +2,74 @@ package runner
 
 import (
 	"github.com/shapovalex/depAnalyzer/processor"
-	"github.com/stretchr/testify/mock"
+	"github.com/shapovalex/depAnalyzer/test"
+	"github.com/stretchr/testify/assert"
 	"testing"
 )
 
-type MockedComparator struct {
-	mock.Mock
-}
-
-func (m *MockedComparator) Process(params processor.Params) {
-	m.Called(params)
-}
-
-func (m *MockedComparator) GetSupportedDependencyManager() string {
-	args := m.Called()
-	return args.String(0)
-}
-
-func (m *MockedComparator) GetSupportedOperation() string {
-	args := m.Called()
-	return args.String(0)
-}
-
 func TestShouldCallPypiComparatorOnSingleProcessor(t *testing.T) {
-
-	pypiComparator := new(MockedComparator)
+	pypiComparator := &test.MockProcessor{Manager: "pypi", Operation: "compare"}
 	processors := []processor.Processor{pypiComparator}
 	executor := NewExecutor(processors)
 	params := processor.Params{
 		DependencyManager: "pypi",
-		InputFiles:        "requirements1.txt,requirements2.txt",
+		InputFiles:        "../test/test_input.txt",
 		Operation:         "compare",
 	}
-	pypiComparator.On("Process", mock.Anything).Return()
-	pypiComparator.On("GetSupportedDependencyManager").Return("pypi")
-	pypiComparator.On("GetSupportedOperation").Return("compare")
 
 	executor.Execute(params)
-	pypiComparator.AssertCalled(t, "Process", params)
+	assert.True(t, pypiComparator.Called)
+	assert.Equal(t, "pypi", pypiComparator.Params.DependencyManager)
+	assert.Equal(t, "compare", pypiComparator.Params.Operation)
+	assert.Equal(t, "../test/test_input.txt", pypiComparator.Params.InputFiles)
+
 }
 
 func TestShouldCallPypiComparatorOnMultipleProcessors(t *testing.T) {
 
-	pypiComparator := new(MockedComparator)
-	mavenComparator := new(MockedComparator)
+	pypiComparator := &test.MockProcessor{Manager: "pypi", Operation: "compare"}
+	mavenComparator := &test.MockProcessor{Manager: "maven", Operation: "compare"}
 	processors := []processor.Processor{mavenComparator, pypiComparator}
 	executor := NewExecutor(processors)
 	params := processor.Params{
 		DependencyManager: "pypi",
-		InputFiles:        "requirements1.txt,requirements2.txt",
+		InputFiles:        "../test/test_input.txt",
 		Operation:         "compare",
 	}
-	pypiComparator.On("Process", mock.Anything).Return()
-	pypiComparator.On("GetSupportedDependencyManager").Return("pypi")
-	pypiComparator.On("GetSupportedOperation").Return("compare")
-
-	mavenComparator.On("Process", mock.Anything).Return()
-	mavenComparator.On("GetSupportedDependencyManager").Return("maven")
-	mavenComparator.On("GetSupportedOperation").Return("compare")
 
 	executor.Execute(params)
-	pypiComparator.AssertCalled(t, "Process", params)
-	mavenComparator.AssertNotCalled(t, "Process", params)
+	assert.Equal(t, "../test/test_input.txt", pypiComparator.Params.InputFiles)
+	assert.False(t, mavenComparator.Called)
 }
 
 func TestShouldCallPypiComparatorBasedOnOperation(t *testing.T) {
 
-	pypiComparator1 := new(MockedComparator)
-	pypiComparator2 := new(MockedComparator)
+	pypiComparator1 := &test.MockProcessor{Manager: "pypi", Operation: "compare"}
+	pypiComparator2 := &test.MockProcessor{Manager: "pypi", Operation: "licenses"}
 	processors := []processor.Processor{pypiComparator1, pypiComparator2}
 	executor := NewExecutor(processors)
 	params := processor.Params{
 		DependencyManager: "pypi",
-		InputFiles:        "requirements1.txt,requirements2.txt",
+		InputFiles:        "",
 		Operation:         "licenses",
 	}
-	pypiComparator1.On("Process", mock.Anything).Return()
-	pypiComparator1.On("GetSupportedDependencyManager").Return("pypi")
-	pypiComparator1.On("GetSupportedOperation").Return("compare")
-
-	pypiComparator2.On("Process", mock.Anything).Return()
-	pypiComparator2.On("GetSupportedDependencyManager").Return("pypi")
-	pypiComparator2.On("GetSupportedOperation").Return("licenses")
 
 	executor.Execute(params)
-	pypiComparator1.AssertNotCalled(t, "Process", params)
-	pypiComparator2.AssertCalled(t, "Process", params)
+	assert.True(t, pypiComparator2.Called)
+	assert.False(t, pypiComparator1.Called)
+}
+
+func TestShouldPassFileContentInParam(t *testing.T) {
+	pypiComparator := &test.MockProcessor{Manager: "pypi", Operation: "compare"}
+	processors := []processor.Processor{pypiComparator}
+	executor := NewExecutor(processors)
+	params := processor.Params{
+		DependencyManager: "pypi",
+		InputFiles:        "../test/test_input.txt,../test/test_input2.txt",
+		Operation:         "compare",
+	}
+
+	executor.Execute(params)
+	assert.Equal(t, "Line1\nLine2", pypiComparator.Params.InputFilesContent[0])
+	assert.Equal(t, "Line3\nLine4", pypiComparator.Params.InputFilesContent[1])
 }
